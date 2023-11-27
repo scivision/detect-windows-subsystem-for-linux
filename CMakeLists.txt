@@ -1,40 +1,48 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.12)
 
 project(IsWSL LANGUAGES C CXX)
 
 enable_testing()
 
 include(CheckIncludeFile)
+include(CheckCXXSymbolExists)
 
 option(fortran "use Fortran" on)
 if(fortran)
   enable_language(Fortran)
 endif()
 
-set(CMAKE_CXX_STANDARD 23)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.20 AND NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 23)
+endif()
+
+# informational for dev users
+if(CMAKE_CXX_STANDARD GREATER_EQUAL 23)
+  check_cxx_symbol_exists(__cpp_lib_string_contains "version" cpp23_string_contains)
+endif()
 
 # --- C example
 check_include_file("sys/utsname.h" HAVE_UTSNAME_H)
 
-add_library(is_wsl_c OBJECT lib.c)
-target_include_directories(is_wsl_c PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+add_library(is_wsl_c OBJECT c/lib.c)
+target_include_directories(is_wsl_c PUBLIC include)
 target_compile_definitions(is_wsl_c PRIVATE $<$<BOOL:${HAVE_UTSNAME_H}>:HAVE_UTSNAME_H>)
 
-add_executable(main_c main.c)
+add_executable(main_c c/main.c)
 target_link_libraries(main_c PRIVATE is_wsl_c)
 add_test(NAME IsWSL_C COMMAND main_c)
 
 # --- C++ example
-add_library(is_wsl_cpp OBJECT lib.cpp)
-target_include_directories(is_wsl_cpp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+add_library(is_wsl_cpp OBJECT cpp/lib.cpp)
+target_include_directories(is_wsl_cpp PUBLIC include)
 
-add_executable(main_cpp main.cpp)
+add_executable(main_cpp cpp/main.cpp)
 target_link_libraries(main_cpp PRIVATE is_wsl_cpp)
 add_test(NAME IsWSL_Cpp COMMAND main_cpp)
 
 # --- Fortran example
 if(fortran)
-  add_executable(main_f main.f90)
+  add_executable(main_f fortran/main.f90)
   target_link_libraries(main_f PRIVATE is_wsl_cpp)
   set_property(TARGET main_f PROPERTY LINKER_LANGUAGE Fortran)
   add_test(NAME IsWSL_Fortran COMMAND main_f)

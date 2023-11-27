@@ -14,7 +14,13 @@ extern "C" bool is_wsl() {
   std::string sysname(buf.sysname);
   std::string release(buf.release);
 
-  return sysname == "Linux" && release.contains("microsoft-standard-WSL");
+  return sysname == "Linux" &&
+#ifdef __cpp_lib_string_contains
+  release.contains("microsoft-standard-WSL");
+#else
+  release.find("microsoft-standard-WSL") != std::string::npos;
+#endif
+
 #else
   return false;
 #endif
