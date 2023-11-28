@@ -14,7 +14,8 @@ on:
 env:
   CTEST_NO_TESTS_ACTION: error
 
-# There is not currently a way to run WSLv2 on GitHub Actions
+# There is not currently a way to run WSLv2 on
+# GitHub Actions or AppVeyor
 # https://github.com/actions/runner-images/issues/5760
 
 

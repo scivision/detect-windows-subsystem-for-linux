@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.19)
 
 project(IsWSL LANGUAGES C CXX)
 
@@ -6,6 +6,7 @@ enable_testing()
 
 include(CheckIncludeFile)
 include(CheckCXXSymbolExists)
+include(CheckCompilerFlag)
 
 option(fortran "use Fortran" on)
 if(fortran)
@@ -20,6 +21,19 @@ endif()
 if(CMAKE_CXX_STANDARD GREATER_EQUAL 23)
   check_cxx_symbol_exists(__cpp_lib_string_contains "version" cpp23_string_contains)
 endif()
+
+# set compilers warnings
+check_compiler_flag(C -Wall C_WALL)
+check_compiler_flag(CXX -Wall CXX_WALL)
+if(fortran)
+check_compiler_flag(Fortran -Wall Fortran_WALL)
+endif()
+
+add_compile_options(
+"$<$<AND:$<COMPILE_LANGUAGE:C>,${C_WALL}>:-Wall>"
+"$<$<AND:$<COMPILE_LANGUAGE:CXX>,${CXX_WALL}>:-Wall>"
+"$<$<AND:$<COMPILE_LANGUAGE:Fortran>,${Fortran_WALL}>:-Wall>"
+)
 
 # --- C example
 check_include_file("sys/utsname.h" HAVE_UTSNAME_H)
