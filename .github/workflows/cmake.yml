@@ -14,11 +14,6 @@ on:
 env:
   CTEST_NO_TESTS_ACTION: error
 
-# There is not currently a way to run WSLv2 on
-# GitHub Actions or AppVeyor
-# https://github.com/actions/runner-images/issues/5760
-
-
 jobs:
 
   non-wsl:
@@ -37,3 +32,22 @@ jobs:
 
     - run: cmake --workflow --preset msvc
       if: ${{ matrix.os == 'windows-latest' }}
+
+  wsl:
+    runs-on: windows-latest
+
+    defaults:
+      run:
+          shell: wsl-bash {0}
+
+    steps:
+    - uses: Vampire/setup-wsl@v2
+      with:
+        additional-packages:
+          cmake make gcc g++ gfortran
+
+    - uses: actions/checkout@v4
+
+    - run: cmake -Bbuild
+    - run: cmake --build build
+    - run: ctest --test-dir build -V

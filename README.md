@@ -20,3 +20,13 @@ Optionally, run the examples:
 ```sh
 ctest --test-dir build
 ```
+
+## CI Notes
+
+There is
+[not currently a way](https://github.com/actions/runner-images/issues/5760)
+to run WSLv2 directly on GitHub Actions or AppVeyor.
+One can run
+[WSLv2 in CI using an image](https://github.com/ubuntu/wsl-actions-example/blob/main/.github/workflows/test_wsl.yaml)
+or a custom
+[GitHub Action](https://github.com/Vampire/setup-wsl).
