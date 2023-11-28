@@ -23,6 +23,9 @@ ctest --test-dir build
 
 ## CI Notes
 
+Our [GitHub Workflow](.github/workflows/cmake.yml)
+gives an example of WSLv1 on GitHub Actions.
+
 There is
 [not currently a way](https://github.com/actions/runner-images/issues/5760)
 to run WSLv2 directly on GitHub Actions or AppVeyor.
