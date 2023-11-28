@@ -1,0 +1,38 @@
+name: cmake
+
+on:
+  push:
+    paths:
+      - "**.cpp"
+      - "**.c"
+      - "**.h"
+      - "**.f90"
+      - "**.cmake"
+      - "**/CMakeLists.txt"
+      - ".github/workflows/cmake.yml"
+
+env:
+  CTEST_NO_TESTS_ACTION: error
+
+# There is not currently a way to run WSLv2 on GitHub Actions
+# https://github.com/actions/runner-images/issues/5760
+
+
+jobs:
+
+  non-wsl:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    runs-on: ${{ matrix.os}}
+    timeout-minutes: 5
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - run: cmake --workflow --preset default
+      if: ${{ matrix.os != 'windows-latest' }}
+
+    - run: cmake --workflow --preset msvc
+      if: ${{ matrix.os == 'windows-latest' }}
