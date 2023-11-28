@@ -23,16 +23,18 @@ if(CMAKE_CXX_STANDARD GREATER_EQUAL 23)
 endif()
 
 # set compilers warnings
+if(NOT MSVC)
 check_compiler_flag(C -Wall C_WALL)
 check_compiler_flag(CXX -Wall CXX_WALL)
 if(fortran)
 check_compiler_flag(Fortran -Wall Fortran_WALL)
 endif()
+endif()
 
 add_compile_options(
-"$<$<AND:$<COMPILE_LANGUAGE:C>,${C_WALL}>:-Wall>"
-"$<$<AND:$<COMPILE_LANGUAGE:CXX>,${CXX_WALL}>:-Wall>"
-"$<$<AND:$<COMPILE_LANGUAGE:Fortran>,${Fortran_WALL}>:-Wall>"
+"$<$<AND:$<COMPILE_LANGUAGE:C>,$<BOOL:${C_WALL}>>:-Wall>"
+"$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${CXX_WALL}>>:-Wall>"
+"$<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<BOOL:${Fortran_WALL}>>:-Wall>"
 )
 
 # --- C example

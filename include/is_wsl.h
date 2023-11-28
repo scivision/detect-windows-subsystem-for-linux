@@ -4,7 +4,7 @@ extern "C" {
 #include <stdbool.h>
 #endif
 
-bool is_wsl(void);
+bool is_wsl();
 
 #ifdef __cplusplus
 }
