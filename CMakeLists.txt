@@ -17,16 +17,18 @@ endif()
 
 option(debug "print debug info" on)
 
-if(NOT CMAKE_CXX_STANDARD AND CMAKE_VERSION VERSION_GREATER_EQUAL 3.20)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.20)
   set(CMAKE_CXX_STANDARD 23)
+else()
+  set(CMAKE_CXX_STANDARD 20)
 endif()
 
 message(STATUS "CMake ${CMAKE_VERSION}  CMAKE_CXX_STANDARD ${CMAKE_CXX_STANDARD}")
 
-# informational for dev users
 if(CMAKE_CXX_STANDARD GREATER_EQUAL 23)
   check_cxx_symbol_exists(__cpp_lib_string_contains "version" cpp23_string_contains)
 endif()
+check_cxx_symbol_exists(__cpp_lib_starts_ends_with "version" cpp20_starts_ends_with)
 
 # set compilers warnings
 if(NOT MSVC)
@@ -57,12 +59,16 @@ target_link_libraries(main_c PRIVATE is_wsl_c)
 add_test(NAME IsWSL_C COMMAND main_c)
 
 # --- C++ example
-add_library(is_wsl_cpp OBJECT cpp/lib.cpp)
-target_include_directories(is_wsl_cpp PUBLIC include)
+if(cpp20_starts_ends_with)
+  add_library(is_wsl_cpp OBJECT cpp/lib.cpp)
+  target_include_directories(is_wsl_cpp PUBLIC include)
 
-add_executable(main_cpp cpp/main.cpp)
-target_link_libraries(main_cpp PRIVATE is_wsl_cpp)
-add_test(NAME IsWSL_Cpp COMMAND main_cpp)
+  add_executable(main_cpp cpp/main.cpp)
+  target_link_libraries(main_cpp PRIVATE is_wsl_cpp)
+  add_test(NAME IsWSL_Cpp COMMAND main_cpp)
+else()
+  message(STATUS "C++20 starts_with/ends_with not supported")
+endif()
 
 # --- Fortran example
 if(fortran)
@@ -70,6 +76,8 @@ if(fortran)
   target_link_libraries(main_f PRIVATE is_wsl_cpp)
   set_property(TARGET main_f PROPERTY LINKER_LANGUAGE Fortran)
   add_test(NAME IsWSL_Fortran COMMAND main_f)
+else()
+  message(STATUS "Fortran not enabled")
 endif()
 
 # --- Python example
