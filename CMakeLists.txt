@@ -15,6 +15,8 @@ if(fortran)
   enable_language(Fortran)
 endif()
 
+option(debug "print debug info" on)
+
 if(NOT CMAKE_CXX_STANDARD AND CMAKE_VERSION VERSION_GREATER_EQUAL 3.20)
   set(CMAKE_CXX_STANDARD 23)
 endif()
@@ -38,6 +40,10 @@ add_compile_options(
 "$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<BOOL:${C_WALL}>>:-Wall>"
 "$<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<BOOL:${Fortran_WALL}>>:-Wall>"
 )
+
+if(debug)
+  add_compile_definitions(DEBUG)
+endif()
 
 # --- C example
 check_include_file("sys/utsname.h" HAVE_UTSNAME_H)

@@ -4,6 +4,10 @@
 #include <sys/utsname.h>
 #endif
 
+#ifdef DEBUG
+#include <iostream>
+#endif
+
 extern "C" bool is_wsl() {
 
 #if __has_include(<sys/utsname.h>)
@@ -13,6 +17,10 @@ extern "C" bool is_wsl() {
 
   std::string sysname(buf.sysname);
   std::string release(buf.release);
+
+#ifdef DEBUG
+  std::cout << "sysname: " << sysname << "   release: " << release << "\n";
+#endif
 
   return sysname == "Linux" &&
 #ifdef __cpp_lib_string_contains
