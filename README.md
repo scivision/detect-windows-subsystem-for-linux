@@ -21,6 +21,28 @@ Optionally, run the examples:
 ctest --test-dir build
 ```
 
+## Heuristic
+
+The method is to check the kernel name string to see if it contains:
+
+* "-Microsoft " (WSLv1)
+* "microsoft-standard-WSL" (WSLv2)
+
+## Human check
+
+Manually see relevant info:
+
+```pwsh
+# from Windows PowerShell or Command Prompt
+wsl.exe -l -v
+```
+
+from WSL Terminal:
+
+```sh
+uname -a
+```
+
 ## CI Notes
 
 Our [GitHub Workflow](.github/workflows/cmake.yml)
