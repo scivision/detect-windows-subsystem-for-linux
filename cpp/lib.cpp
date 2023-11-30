@@ -23,7 +23,7 @@ extern "C" bool is_wsl() {
 #endif
 
   return sysname == "Linux" &&
-   (release.ends_with("microsoft-standard-WSL") ||
+   (release.ends_with("microsoft-standard-WSL2") ||
     release.ends_with("-Microsoft")); // WSLv1
 
 

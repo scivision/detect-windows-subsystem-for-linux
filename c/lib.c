@@ -29,7 +29,7 @@ bool is_wsl(void) {
 #endif
 
   return strcmp(buf.sysname, "Linux") == 0 &&
-    (str_ends_with(buf.release, "microsoft-standard-WSL") ||
+    (str_ends_with(buf.release, "microsoft-standard-WSL2") ||
      str_ends_with(buf.release, "-Microsoft"));
 #else
   return false;

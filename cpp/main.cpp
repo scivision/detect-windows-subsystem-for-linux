@@ -3,6 +3,7 @@
 #include <iostream>
 
 int main() {
-  std::cout << "is_WSL: " << is_wsl() << "\n";
+  bool wsl = is_wsl();
+  std::cout << "WSL: " << wsl << "\n";
   return 0;
 }
