@@ -17,17 +17,8 @@ endif()
 
 option(debug "print debug info" on)
 
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.20)
-  set(CMAKE_CXX_STANDARD 23)
-else()
-  set(CMAKE_CXX_STANDARD 20)
-endif()
+set(CMAKE_CXX_STANDARD 20)
 
-message(STATUS "CMake ${CMAKE_VERSION}  CMAKE_CXX_STANDARD ${CMAKE_CXX_STANDARD}")
-
-if(CMAKE_CXX_STANDARD GREATER_EQUAL 23)
-  check_cxx_symbol_exists(__cpp_lib_string_contains "version" cpp23_string_contains)
-endif()
 check_cxx_symbol_exists(__cpp_lib_starts_ends_with "version" cpp20_starts_ends_with)
 
 # set compilers warnings
