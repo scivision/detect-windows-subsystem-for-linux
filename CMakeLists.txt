@@ -43,16 +43,15 @@ add_compile_options(
 "$<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<BOOL:${Fortran_WALL}>>:-Wall>"
 )
 
-if(debug)
-  add_compile_definitions(DEBUG)
-endif()
-
 # --- C example
 check_include_file("sys/utsname.h" HAVE_UTSNAME_H)
 
 add_library(is_wsl_c OBJECT c/lib.c)
 target_include_directories(is_wsl_c PUBLIC include)
-target_compile_definitions(is_wsl_c PRIVATE $<$<BOOL:${HAVE_UTSNAME_H}>:HAVE_UTSNAME_H>)
+target_compile_definitions(is_wsl_c PRIVATE
+$<$<BOOL:${HAVE_UTSNAME_H}>:HAVE_UTSNAME_H>
+$<$<BOOL:${debug}>:DEBUG>
+)
 
 add_executable(main_c c/main.c)
 target_link_libraries(main_c PRIVATE is_wsl_c)
@@ -62,6 +61,7 @@ add_test(NAME IsWSL_C COMMAND main_c)
 if(cpp20_starts_ends_with)
   add_library(is_wsl_cpp OBJECT cpp/lib.cpp)
   target_include_directories(is_wsl_cpp PUBLIC include)
+  target_compile_definitions(is_wsl_cpp PRIVATE $<$<BOOL:${debug}>:DEBUG>)
 
   add_executable(main_cpp cpp/main.cpp)
   target_link_libraries(main_cpp PRIVATE is_wsl_cpp)
