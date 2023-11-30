@@ -48,8 +48,15 @@ jobs:
 
     - uses: actions/checkout@v4
 
+    - name: tell WSL version
+      run: wsl.exe -l -v
+      shell: pwsh
+
     - name: tell kernel name
       run: uname -a
+
+    - name: tell OS release
+      run: cat /etc/os-release
 
     - run: cmake -Bbuild
     - run: cmake --build build

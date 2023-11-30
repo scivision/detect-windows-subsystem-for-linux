@@ -14,7 +14,8 @@ bool is_wsl(void) {
     return false;
 
   return strcmp(buf.sysname, "Linux") == 0 &&
-    strstr(buf.release, "microsoft-standard-WSL") != NULL;
+    (strstr(buf.release, "microsoft-standard-WSL") != NULL ||
+     strstr(buf.release, "-Microsoft ") != NULL);
 #else
   return false;
 #endif
