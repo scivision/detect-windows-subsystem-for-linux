@@ -8,7 +8,7 @@
 #include <iostream>
 #endif
 
-extern "C" bool is_wsl() {
+extern "C" int is_wsl() {
 
 #if __has_include(<sys/utsname.h>)
   struct utsname buf;
@@ -19,15 +19,16 @@ extern "C" bool is_wsl() {
   std::string release(buf.release);
 
 #ifdef DEBUG
-  std::cout << "sysname: " << sysname << "   release: " << release << "\n";
+  std::cout << "sysname: " << sysname << "   release: " << release << "   machine: " << buf.machine << "\n";
 #endif
 
-  return sysname == "Linux" &&
-   (release.ends_with("microsoft-standard-WSL2") ||
-    release.ends_with("-Microsoft")); // WSLv1
-
-
-#else
-  return false;
+  if (sysname != "Linux")
+    return 0;
+  if (release.ends_with("microsoft-standard-WSL2"))
+    return 2;
+  if (release.ends_with("-Microsoft"))
+    return 1;
 #endif
+
+  return 0;
 }

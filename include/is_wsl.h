@@ -1,10 +1,8 @@
 #ifdef __cplusplus
 extern "C" {
-#else
-#include <stdbool.h>
 #endif
 
-bool is_wsl();
+int is_wsl();
 
 #ifdef __cplusplus
 }

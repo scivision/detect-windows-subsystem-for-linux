@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 int main(void) {
-  bool wsl = is_wsl();
+  int wsl = is_wsl();
   printf("WSL: %d\n", wsl);
   return 0;
 }

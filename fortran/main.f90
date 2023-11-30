@@ -1,15 +1,15 @@
 program main
 
-use, intrinsic :: iso_c_binding, only : C_BOOL
+use, intrinsic :: iso_c_binding, only : C_INT
 
 implicit none
 
 interface
-logical(C_BOOL) function is_wsl() bind(C)
-import C_BOOL
+integer(C_INT) function is_wsl() bind(C)
+import
 end function
 end interface
 
-print '(a,L1)', 'Fortran: is_WSL: ', is_wsl()
+print '(a,i1)', 'WSL: ', is_wsl()
 
 end program

@@ -10,11 +10,19 @@ import functools
 
 
 @functools.cache
-def is_wsl() -> bool:
+def is_wsl() -> int:
     """
     detects if Python is running in WSL
     """
-    return "microsoft-standard-WSL" in platform.uname().release
+
+    r = platform.uname().release
+
+    if r.endswith("-Microsoft"):
+        return 1
+    elif r.endswith("microsoft-standard-WSL"):
+        return 2
+
+    return 0
 
 
 @functools.cache
@@ -31,5 +39,5 @@ def wsl_available() -> bool:
 
 
 if __name__ == "__main__":
-    print("is_wsl: ", is_wsl())
+    print("WSL: ", is_wsl())
     print("is WSL available: ", wsl_available())

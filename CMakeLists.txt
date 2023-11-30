@@ -60,20 +60,13 @@ check_include_file("sys/utsname.h" HAVE_UTSNAME_H)
 
 add_library(is_wsl_c OBJECT c/lib.c)
 target_include_directories(is_wsl_c PUBLIC include)
-target_compile_definitions(is_wsl_c PRIVATE
-$<$<BOOL:${HAVE_UTSNAME_H}>:HAVE_UTSNAME_H>
-$<$<BOOL:${debug}>:DEBUG>
-)
+target_compile_definitions(is_wsl_c PRIVATE $<$<BOOL:${HAVE_UTSNAME_H}>:HAVE_UTSNAME_H>)
 
 add_executable(main_c c/main.c)
 target_link_libraries(main_c PRIVATE is_wsl_c)
 
 add_test(NAME IsWSL_C COMMAND main_c)
-if(wsl GREATER 0)
-  set_property(TEST IsWSL_C PROPERTY PASS_REGULAR_EXPRESSION "WSL: 1")
-else()
-  set_property(TEST IsWSL_C PROPERTY PASS_REGULAR_EXPRESSION "WSL: 0")
-endif()
+set_property(TEST IsWSL_C PROPERTY PASS_REGULAR_EXPRESSION "WSL: ${wsl}")
 
 # --- C++ example
 if(cpp20_starts_ends_with)
@@ -85,21 +78,19 @@ if(cpp20_starts_ends_with)
   target_link_libraries(main_cpp PRIVATE is_wsl_cpp)
 
   add_test(NAME IsWSL_Cpp COMMAND main_cpp)
-  if(wsl GREATER 0)
-    set_property(TEST IsWSL_Cpp PROPERTY PASS_REGULAR_EXPRESSION "WSL: 1")
-  else()
-    set_property(TEST IsWSL_Cpp PROPERTY PASS_REGULAR_EXPRESSION "WSL: 0")
-  endif()
+  set_property(TEST IsWSL_Cpp PROPERTY PASS_REGULAR_EXPRESSION "WSL: ${wsl}")
 else()
   message(STATUS "C++20 starts_with/ends_with not supported")
 endif()
 
 # --- Fortran example
-if(fortran)
+if(fortran AND cpp20_starts_ends_with)
   add_executable(main_f fortran/main.f90)
   target_link_libraries(main_f PRIVATE is_wsl_cpp)
   set_property(TARGET main_f PROPERTY LINKER_LANGUAGE Fortran)
+
   add_test(NAME IsWSL_Fortran COMMAND main_f)
+  set_property(TEST IsWSL_Fortran PROPERTY PASS_REGULAR_EXPRESSION "WSL: ${wsl}")
 else()
   message(STATUS "Fortran not enabled")
 endif()

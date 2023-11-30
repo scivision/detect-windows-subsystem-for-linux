@@ -1,10 +1,7 @@
 #include "is_wsl.h"
 
 #include <string.h>
-
-#ifdef DEBUG
-#include <stdio.h>  // printf
-#endif
+#include <stdbool.h>
 
 #ifdef HAVE_UTSNAME_H
 #include <sys/utsname.h>
@@ -18,20 +15,19 @@ static bool str_ends_with(const char *s, const char *suffix) {
     return suffix_len <= slen && !strcmp(s + slen - suffix_len, suffix);
 }
 
-bool is_wsl(void) {
+int is_wsl(void) {
 #ifdef HAVE_UTSNAME_H
   struct utsname buf;
   if (uname(&buf) != 0)
     return false;
 
-#ifdef DEBUG
-    printf("sysname: %s   release: %s \n", buf.sysname, buf.release);
+  if (strcmp(buf.sysname, "Linux") != 0)
+    return 0;
+  if (str_ends_with(buf.release, "microsoft-standard-WSL2"))
+    return 2;
+  if (str_ends_with(buf.release, "-Microsoft"))
+    return 1;
 #endif
 
-  return strcmp(buf.sysname, "Linux") == 0 &&
-    (str_ends_with(buf.release, "microsoft-standard-WSL2") ||
-     str_ends_with(buf.release, "-Microsoft"));
-#else
-  return false;
-#endif
+  return 0;
 }
