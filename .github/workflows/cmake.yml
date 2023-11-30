@@ -48,6 +48,9 @@ jobs:
 
     - uses: actions/checkout@v4
 
+    - name: tell kernel name
+      run: uname -a
+
     - run: cmake -Bbuild
     - run: cmake --build build
 
