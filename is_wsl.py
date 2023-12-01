@@ -30,12 +30,13 @@ def wsl_available() -> bool:
     """
     detect if Windows Subsystem for Linux is available from Windows
     """
-    if os.name != "nt":
+    if os.name != "nt" or not shutil.which("wsl"):
         return False
-    if not shutil.which("wsl"):
+    try:
+        r = subprocess.check_output(["wsl", "uname", "-r"], text=True, timeout=15)
+        return "microsoft-standard-WSL" in r.stdout
+    except subprocess.SubprocessError:
         return False
-    r = subprocess.run(["wsl", "uname", "-r"], text=True, capture_output=True)
-    return r.returncode == 0 and "microsoft-standard-WSL" in r.stdout
 
 
 if __name__ == "__main__":
