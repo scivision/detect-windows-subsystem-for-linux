@@ -15,8 +15,8 @@ extern "C" int is_wsl() {
   if (uname(&buf) != 0)
     return false;
 
-  std::string sysname(buf.sysname);
-  std::string release(buf.release);
+  std::string_view sysname(buf.sysname);
+  std::string_view release(buf.release);
 
 #ifdef DEBUG
   std::cout << "sysname: " << sysname << "   release: " << release << "   machine: " << buf.machine << "\n";
