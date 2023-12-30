@@ -10,31 +10,32 @@ import functools
 
 
 @functools.cache
-def is_wsl() -> int:
+def is_wsl(v: str = platform.uname().release) -> int:
     """
     detects if Python is running in WSL
     """
 
-    r = platform.uname().release
-
-    if r.endswith("-Microsoft"):
+    if v.endswith("-Microsoft"):
         return 1
-    elif r.endswith("microsoft-standard-WSL"):
+    elif v.endswith("microsoft-standard-WSL2"):
         return 2
 
     return 0
 
 
 @functools.cache
-def wsl_available() -> bool:
+def wsl_available() -> int:
     """
     detect if Windows Subsystem for Linux is available from Windows
     """
     if os.name != "nt" or not shutil.which("wsl"):
         return False
     try:
-        r = subprocess.check_output(["wsl", "uname", "-r"], text=True, timeout=15)
-        return "microsoft-standard-WSL" in r.stdout
+        return is_wsl(
+            subprocess.check_output(
+                ["wsl", "uname", "-r"], text=True, timeout=15
+            ).strip()
+        )
     except subprocess.SubprocessError:
         return False
 

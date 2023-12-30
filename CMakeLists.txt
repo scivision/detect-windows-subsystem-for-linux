@@ -32,6 +32,7 @@ endif()
 add_compile_options(
 "$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<BOOL:${C_WALL}>>:-Wall>"
 "$<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<BOOL:${Fortran_WALL}>>:-Wall>"
+"$<$<COMPILE_LANG_AND_ID:C,GNU>:-Wno-unused-function>"
 )
 
 if(debug)
