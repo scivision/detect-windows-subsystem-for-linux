@@ -13,6 +13,8 @@ on:
 
 env:
   CTEST_NO_TESTS_ACTION: error
+  CMAKE_BUILD_PARALLEL_LEVEL: 4
+  CTEST_PARALLEL_LEVEL: 0
 
 jobs:
 
@@ -33,8 +35,29 @@ jobs:
     - run: cmake --workflow --preset msvc
       if: ${{ matrix.os == 'windows-latest' }}
 
+
+  gcc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    strategy:
+      matrix:
+        gcc: [9]
+
+    env:
+      CC: gcc-${{ matrix.gcc }}
+      CXX: g++-${{ matrix.gcc }}
+      FC: gfortran-${{ matrix.gcc }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - run: cmake --workflow --preset default
+
+
   wsl:
     runs-on: windows-latest
+    timeout-minutes: 5
 
     defaults:
       run:
