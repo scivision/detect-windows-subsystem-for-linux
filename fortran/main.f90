@@ -10,6 +10,6 @@ import
 end function
 end interface
 
-print '(a,i1)', 'WSL: ', is_wsl()
+print '(a,i2)', 'WSL: ', is_wsl()
 
 end program

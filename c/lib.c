@@ -3,9 +3,14 @@
 #include <string.h>
 #include <stdbool.h>
 
-#ifdef HAVE_UTSNAME_H
+#ifndef __has_include
+#define __has_include(x) 0
+#endif
+
+#if __has_include(<sys/utsname.h>)
 #include <sys/utsname.h>
 #endif
+
 
 static bool str_ends_with(const char *s, const char *suffix) {
   /* https://stackoverflow.com/a/41652727 */
@@ -15,11 +20,13 @@ static bool str_ends_with(const char *s, const char *suffix) {
     return suffix_len <= slen && !strcmp(s + slen - suffix_len, suffix);
 }
 
+
 int is_wsl(void) {
-#ifdef HAVE_UTSNAME_H
+
+#if __has_include(<sys/utsname.h>)
   struct utsname buf;
   if (uname(&buf) != 0)
-    return false;
+    return 0;
 
   if (strcmp(buf.sysname, "Linux") != 0)
     return 0;
@@ -29,5 +36,5 @@ int is_wsl(void) {
     return 1;
 #endif
 
-  return 0;
+  return -1;
 }

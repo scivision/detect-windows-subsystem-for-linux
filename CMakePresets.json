@@ -4,10 +4,7 @@
 "configurePresets": [
 {
   "name": "default",
-  "binaryDir": "${sourceDir}/build",
-  "cacheVariables": {
-    "fortran": false
-  }
+  "binaryDir": "${sourceDir}/build"
 },
 {
   "name": "msvc", "inherits": "default",

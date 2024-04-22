@@ -41,7 +41,7 @@ jobs:
           shell: wsl-bash {0}
 
     steps:
-    - uses: Vampire/setup-wsl@v2
+    - uses: Vampire/setup-wsl@v3
       with:
         additional-packages:
           cmake make gcc g++ gfortran
@@ -51,9 +51,6 @@ jobs:
     - name: tell WSL version
       run: wsl.exe -l -v
       shell: pwsh
-
-    - name: tell kernel name
-      run: uname -a
 
     - name: tell OS release
       run: cat /etc/os-release
