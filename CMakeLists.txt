@@ -37,11 +37,14 @@ if(debug)
 endif()
 
 # CMake detect WSL
-set(wsl "(0|-1)")
-if(CMAKE_HOST_SYSTEM_VERSION MATCHES "(-Microsoft$)")
-  set(wsl 1)
-elseif(CMAKE_HOST_SYSTEM_VERSION MATCHES "(microsoft-standard-WSL2$)")
+if(CMAKE_HOST_SYSTEM_VERSION MATCHES "microsoft-standard-WSL2$")
   set(wsl 2)
+elseif(CMAKE_HOST_SYSTEM_VERSION MATCHES "-Microsoft$")
+  set(wsl 1)
+elseif(NOT HAVE_SYS_UTSNAME)
+  set(wsl -1)
+else()
+  set(wsl 0)
 endif()
 
 # --- C example
@@ -65,7 +68,6 @@ add_test(NAME IsWSL_Cpp COMMAND main_cpp)
 
 
 set_property(TEST IsWSL_C IsWSL_Cpp PROPERTY PASS_REGULAR_EXPRESSION "WSL:[ ]+${wsl}")
-
 
 # --- Fortran example
 if(fortran)
