@@ -16,7 +16,7 @@ int is_wsl() {
 #if __has_include(<sys/utsname.h>)
   struct utsname buf;
   if (uname(&buf) != 0)
-    return false;
+    return -1;
 
   std::string_view sysname(buf.sysname);
   std::string_view release(buf.release);
@@ -39,6 +39,8 @@ int is_wsl() {
   if (release.find("-Microsoft") != std::string::npos)
     return 1;
 #endif
+
+  return 0;
 #endif
 
   return -1;

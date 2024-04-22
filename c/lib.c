@@ -26,7 +26,7 @@ int is_wsl(void) {
 #if __has_include(<sys/utsname.h>)
   struct utsname buf;
   if (uname(&buf) != 0)
-    return 0;
+    return -1;
 
   if (strcmp(buf.sysname, "Linux") != 0)
     return 0;
@@ -34,6 +34,8 @@ int is_wsl(void) {
     return 2;
   if (str_ends_with(buf.release, "-Microsoft"))
     return 1;
+
+  return 0;
 #endif
 
   return -1;
