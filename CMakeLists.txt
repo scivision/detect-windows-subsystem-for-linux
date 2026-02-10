@@ -83,6 +83,7 @@ endif()
 find_package(Python COMPONENTS Interpreter)
 if(Python_FOUND)
   add_test(NAME IsWSL_Python COMMAND Python::Interpreter ${CMAKE_CURRENT_SOURCE_DIR}/is_wsl.py)
+  set_property(TEST IsWSL_Python PROPERTY PASS_REGULAR_EXPRESSION "WSL:[ ]+${wsl}")
 endif()
 
 file(GENERATE OUTPUT .gitignore CONTENT "*")

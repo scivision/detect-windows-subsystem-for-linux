@@ -41,5 +41,5 @@ def wsl_available() -> int:
 
 
 if __name__ == "__main__":
-    print("WSL: ", is_wsl())
-    print("is WSL available: ", wsl_available())
+    print(f"WSL: {is_wsl()}")
+    print(f"is WSL available: {wsl_available()}")
