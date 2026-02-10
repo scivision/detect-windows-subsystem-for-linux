@@ -7,8 +7,7 @@
   "binaryDir": "${sourceDir}/build"
 },
 {
-  "name": "msvc", "inherits": "default",
-  "generator": "Visual Studio 17 2022"
+  "name": "msvc", "inherits": "default"
 }
 ],
 "buildPresets": [

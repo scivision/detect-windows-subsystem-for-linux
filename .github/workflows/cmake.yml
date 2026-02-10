@@ -40,6 +40,8 @@ jobs:
 
     - run: cmake --workflow msvc
       if: ${{ matrix.os == 'windows-latest' }}
+      env:
+        CMAKE_GENERATOR: "Visual Studio 17 2022"
 
 
   gcc:
@@ -49,10 +51,8 @@ jobs:
     steps:
     - *checkout
 
-    - &default-work
-      name: CMake Build and Test
-      run: cmake --workflow --preset default
-# need --preset for CMake 3.28 of WSL ubuntu 24
+    - name: CMake Build and Test
+      run: cmake --workflow default
 
 
   wsl:
@@ -61,7 +61,7 @@ jobs:
 
     defaults:
       run:
-          shell: wsl-bash {0}
+        shell: wsl-bash {0}
 
     steps:
 
@@ -81,4 +81,9 @@ jobs:
 
     - *checkout
 
-    - *default-work
+    - name: CMake Build and Test
+      run: cmake --workflow --preset default
+      env:
+        CMAKE_GENERATOR: Ninja
+
+# need --preset for CMake 3.28 of WSL ubuntu 24
