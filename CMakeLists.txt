@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15...3.28)
+cmake_minimum_required(VERSION 3.15...4.2)
 # 3.15: COMPILE_LANGUAGE:C,CXX
 
 project(IsWSL LANGUAGES C CXX)

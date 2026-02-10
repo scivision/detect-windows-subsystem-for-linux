@@ -13,7 +13,7 @@ on:
 
 env:
   CTEST_NO_TESTS_ACTION: error
-  CMAKE_BUILD_PARALLEL_LEVEL: 4
+  CMAKE_GENERATOR: Ninja
   CTEST_PARALLEL_LEVEL: 0
 
 jobs:
@@ -27,12 +27,13 @@ jobs:
     timeout-minutes: 5
 
     steps:
-    - uses: actions/checkout@v4
+    - &checkout
+      uses: actions/checkout@v6
 
-    - run: cmake --workflow --preset default
+    - run: cmake --workflow default
       if: ${{ matrix.os != 'windows-latest' }}
 
-    - run: cmake --workflow --preset msvc
+    - run: cmake --workflow msvc
       if: ${{ matrix.os == 'windows-latest' }}
 
 
@@ -50,9 +51,9 @@ jobs:
       FC: gfortran-${{ matrix.gcc }}
 
     steps:
-    - uses: actions/checkout@v4
+    - *checkout
 
-    - run: cmake --workflow --preset default
+    - run: cmake --workflow default
 
 
   wsl:
@@ -69,7 +70,7 @@ jobs:
         additional-packages:
           cmake make gcc g++ gfortran
 
-    - uses: actions/checkout@v4
+    - *checkout
 
     - name: tell WSL version
       run: wsl.exe -l -v
