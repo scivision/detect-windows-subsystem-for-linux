@@ -81,9 +81,13 @@ jobs:
 
     - *checkout
 
-    - name: CMake Build and Test
-      run: cmake --workflow --preset default
-      env:
-        CMAKE_GENERATOR: Ninja
+    - name: CMake Configure
+      run: cmake -Bbuild -G Ninja
 
-# need --preset for CMake 3.28 of WSL ubuntu 24
+    - name: CMake Build
+      run: cmake --build build
+
+    - name: CMake Test
+      run: ctest --test-dir build -V
+
+# seems there's not yet an Vampire/setup-wsl@v6 option to set environment variables
