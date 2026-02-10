@@ -21,7 +21,6 @@ set(CMAKE_CXX_STANDARD 20)
 
 message(STATUS "CMake ${CMAKE_VERSION}  kernel: ${CMAKE_HOST_SYSTEM_VERSION}")
 
-check_include_file("sys/utsname.h" HAVE_SYS_UTSNAME)
 check_cxx_symbol_exists(__cpp_lib_starts_ends_with "version" cpp20_starts_ends_with)
 
 # set compilers warnings
@@ -41,8 +40,6 @@ if(CMAKE_HOST_SYSTEM_VERSION MATCHES "microsoft-standard-WSL2$")
   set(wsl 2)
 elseif(CMAKE_HOST_SYSTEM_VERSION MATCHES "-Microsoft$")
   set(wsl 1)
-elseif(NOT HAVE_SYS_UTSNAME)
-  set(wsl -1)
 else()
   set(wsl 0)
 endif()

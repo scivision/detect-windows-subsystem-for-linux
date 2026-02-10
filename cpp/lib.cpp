@@ -39,9 +39,7 @@ int is_wsl() {
   if (release.find("-Microsoft") != std::string::npos)
     return 1;
 #endif
-
-  return 0;
 #endif
 
-  return -1;
+  return 0;
 }
