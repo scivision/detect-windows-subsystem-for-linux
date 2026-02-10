@@ -11,6 +11,11 @@ on:
       - "**/CMakeLists.txt"
       - ".github/workflows/cmake.yml"
 
+# avoid wasted runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   CTEST_NO_TESTS_ACTION: error
   CMAKE_GENERATOR: Ninja
@@ -46,7 +51,8 @@ jobs:
 
     - &default-work
       name: CMake Build and Test
-      run: cmake --workflow default
+      run: cmake --workflow --preset default
+# need --preset for CMake 3.28 of WSL ubuntu 24
 
 
   wsl:
@@ -58,13 +64,10 @@ jobs:
           shell: wsl-bash {0}
 
     steps:
-#FIXME: https://github.com/Vampire/setup-wsl/issues/76
-    - uses: Vampire/setup-wsl@v6
-    - shell: 'wsl-bash {0}'
-      run: 'sed -i s/ftp.debian.org/archive.debian.org/ /etc/apt/sources.list'
 
     - uses: Vampire/setup-wsl@v6
       with:
+        distribution: Ubuntu-24.04
         additional-packages:
           cmake ninja-build gcc g++ gfortran
         use-cache: true
