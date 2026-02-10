@@ -63,8 +63,8 @@ target_link_libraries(main_cpp PRIVATE is_wsl_cpp)
 
 add_test(NAME IsWSL_Cpp COMMAND main_cpp)
 
-
-set_property(TEST IsWSL_C IsWSL_Cpp PROPERTY PASS_REGULAR_EXPRESSION "WSL:[ ]+${wsl}")
+set(ret_reg "WSL:[ ]+${wsl}")
+set_property(TEST IsWSL_C IsWSL_Cpp PROPERTY PASS_REGULAR_EXPRESSION ${ret_reg})
 
 # --- Fortran example
 if(fortran)
@@ -73,14 +73,14 @@ if(fortran)
   set_property(TARGET main_f PROPERTY LINKER_LANGUAGE Fortran)
 
   add_test(NAME IsWSL_Fortran COMMAND main_f)
-  set_property(TEST IsWSL_Fortran PROPERTY PASS_REGULAR_EXPRESSION "WSL:[ ]+${wsl}")
+  set_property(TEST IsWSL_Fortran PROPERTY PASS_REGULAR_EXPRESSION ${ret_reg})
 endif()
 
 # --- Python example
 find_package(Python COMPONENTS Interpreter)
 if(Python_FOUND)
   add_test(NAME IsWSL_Python COMMAND Python::Interpreter ${CMAKE_CURRENT_SOURCE_DIR}/is_wsl.py)
-  set_property(TEST IsWSL_Python PROPERTY PASS_REGULAR_EXPRESSION "WSL:[ ]+${wsl}")
+  set_property(TEST IsWSL_Python PROPERTY PASS_REGULAR_EXPRESSION ${ret_reg})
 endif()
 
 file(GENERATE OUTPUT .gitignore CONTENT "*")
