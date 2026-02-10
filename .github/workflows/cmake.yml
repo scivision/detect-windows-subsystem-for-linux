@@ -41,46 +41,36 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
-    strategy:
-      matrix:
-        gcc: [9]
-
-    env:
-      CC: gcc-${{ matrix.gcc }}
-      CXX: g++-${{ matrix.gcc }}
-      FC: gfortran-${{ matrix.gcc }}
-
     steps:
     - *checkout
 
-    - run: cmake --workflow default
+    - &default-work
+      name: CMake Build and Test
+      run: cmake --workflow default
 
 
   wsl:
     runs-on: windows-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     defaults:
       run:
           shell: wsl-bash {0}
 
     steps:
-    - uses: Vampire/setup-wsl@v3
+    - uses: Vampire/setup-wsl@v6
       with:
         additional-packages:
-          cmake make gcc g++ gfortran
+          cmake ninja-build gcc g++ gfortran
+        use-cache: true
 
-    - *checkout
+    - name: tell OS release
+      run: cat /etc/os-release
 
     - name: tell WSL version
       run: wsl.exe -l -v
       shell: pwsh
 
-    - name: tell OS release
-      run: cat /etc/os-release
+    - *checkout
 
-    - run: cmake -Bbuild
-    - run: cmake --build build
-
-    - run: ctest -V
-      working-directory: build
+    - *default-work
